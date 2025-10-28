@@ -1,0 +1,19 @@
+{
+  "hosting": {
+    "public": "dist/client",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "hydi-web",
+          "region": "us-central1"
+        }
+      }
+    ]
+  }
+}
