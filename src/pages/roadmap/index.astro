@@ -1,0 +1,56 @@
+---
+import Layout from "../../layouts/Main.astro";
+---
+
+<Layout>
+  <main class="page">
+    <div class="section">
+      <h1 class="heading-primary">Visual Roadmap</h1>
+      <p class="typography-primary">Track activation and delivery milestones. Data is saved to your browser.</p>
+      <div id="roadmap" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;">
+        <div class="form">
+          <h2 class="heading-secondary">Foundation</h2>
+          <label class="form-label"><input type="checkbox" data-k="gcp-project"/> GCP project created</label>
+          <label class="form-label"><input type="checkbox" data-k="billing"/> Billing linked</label>
+          <label class="form-label"><input type="checkbox" data-k="secrets"/> Secrets configured</label>
+        </div>
+        <div class="form">
+          <h2 class="heading-secondary">Deploy</h2>
+          <label class="form-label"><input type="checkbox" data-k="cloud-run"/> Cloud Run deployed</label>
+          <label class="form-label"><input type="checkbox" data-k="hosting"/> Firebase Hosting rewrites</label>
+          <label class="form-label"><input type="checkbox" data-k="dns"/> DNS & SSL</label>
+        </div>
+        <div class="form">
+          <h2 class="heading-secondary">Hydi</h2>
+          <label class="form-label"><input type="checkbox" data-k="funding"/> Funding Finder ready</label>
+          <label class="form-label"><input type="checkbox" data-k="autopilot"/> Local agent installed</label>
+          <label class="form-label"><input type="checkbox" data-k="dashhub"/> DashHub configured</label>
+        </div>
+      </div>
+      <div class="list-actions" style="margin-top:1rem;">
+        <button id="clear-roadmap" class="button-secondary">Reset Progress</button>
+      </div>
+      <script>
+        const key = 'visual-roadmap';
+        const section = document.getElementById('roadmap');
+        function load(){
+          const saved = JSON.parse(localStorage.getItem(key) || '{}');
+          section.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            const k = cb.getAttribute('data-k');
+            cb.checked = !!saved[k];
+            cb.addEventListener('change', () => {
+              const state = JSON.parse(localStorage.getItem(key) || '{}');
+              state[k] = cb.checked;
+              localStorage.setItem(key, JSON.stringify(state));
+            });
+          });
+        }
+        load();
+        document.getElementById('clear-roadmap')?.addEventListener('click', () => {
+          localStorage.removeItem(key);
+          load();
+        });
+      </script>
+    </div>
+  </main>
+</Layout>

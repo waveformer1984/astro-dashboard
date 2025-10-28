@@ -1,0 +1,68 @@
+---
+import Layout from "../../layouts/Main.astro";
+---
+
+<Layout>
+  <main class="page">
+    <div class="section">
+      <h1 class="heading-primary">Funding Finder</h1>
+      <p class="typography-primary">Discover grants and funding opportunities. Hydi can draft responses.</p>
+      <form class="form" id="form-funding">
+        <label class="form-label">Organization Type
+          <select name="orgType" class="form-input">
+            <option value="individual">Individual</option>
+            <option value="nonprofit">Nonprofit</option>
+            <option value="forprofit">For-profit</option>
+            <option value="education">Education</option>
+          </select>
+        </label>
+        <label class="form-label">Location
+          <input name="location" class="form-input" placeholder="City, State or Country" />
+        </label>
+        <label class="form-label">Amount Needed (USD)
+          <input name="amountNeeded" type="number" class="form-input" value="5000" />
+        </label>
+        <label class="form-label">Purpose / Project Summary
+          <textarea name="purpose" class="form-textarea" placeholder="Describe your project and use of funds"></textarea>
+        </label>
+        <label class="form-label">Deadline (optional)
+          <input name="deadline" class="form-input" placeholder="YYYY-MM-DD" />
+        </label>
+        <label class="form-label">Contact Email
+          <input name="contactEmail" type="email" class="form-input" placeholder="you@example.com" />
+        </label>
+        <button class="button-primary form-button" type="submit">Search</button>
+      </form>
+      <div id="funding-results"></div>
+      <script>
+        import { actions } from "astro:actions";
+        import { navigate } from "astro:transitions/client";
+
+        const form = document.getElementById('form-funding');
+        const container = document.getElementById('funding-results');
+        form?.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const formData = new FormData(form);
+          const { data, error } = await actions.fundingSearch(formData);
+          if (error) { alert(error.message); return; }
+          if (!data?.results) { container.textContent = 'No results.'; return; }
+          container.innerHTML = '';
+          for (const g of data.results) {
+            const card = document.createElement('div');
+            card.className = 'form-success';
+            card.style.marginTop = '0.5rem';
+            card.innerHTML = `<strong>${g.name}</strong> — up to $${g.maxAmount} — Match ${(g.match*100).toFixed(0)}%<br/>Due: ${g.due} — <a class="link" target="_blank" href="${g.link}">Open</a><br/>Reqs: ${g.requirements.join(', ')}`;
+            const btn = document.createElement('button');
+            btn.className = 'button-secondary';
+            btn.style.marginTop = '0.5rem';
+            btn.textContent = 'Draft Application (stub)';
+            btn.addEventListener('click', () => navigate('/funding/submitted'));
+            card.appendChild(document.createElement('br'));
+            card.appendChild(btn);
+            container.appendChild(card);
+          }
+        });
+      </script>
+    </div>
+  </main>
+</Layout>

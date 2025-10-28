@@ -1,0 +1,54 @@
+---
+import Layout from "../../layouts/Main.astro";
+---
+
+<Layout>
+  <main class="page">
+    <div class="section">
+      <h1 class="heading-primary">Setup & Activation</h1>
+      <p class="typography-primary">Links to activate Google Cloud, Firebase, and security features.</p>
+      <ul class="list-bullets-primary">
+        <li><a class="link" href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>
+        <li><a class="link" href="https://console.cloud.google.com/billing" target="_blank">Billing</a></li>
+        <li><a class="link" href="https://console.cloud.google.com/iam-admin/iam" target="_blank">IAM</a> / <a class="link" href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_blank">Service Accounts</a></li>
+        <li><a class="link" href="https://console.cloud.google.com/apis/dashboard" target="_blank">APIs & Services</a> / <a class="link" href="https://console.cloud.google.com/apis/credentials" target="_blank">Credentials</a> / <a class="link" href="https://console.cloud.google.com/apis/credentials/consent" target="_blank">OAuth consent</a></li>
+        <li><a class="link" href="https://console.firebase.google.com/" target="_blank">Firebase Console</a> / <a class="link" href="https://console.firebase.google.com/project/_/hosting" target="_blank">Hosting</a> / <a class="link" href="https://console.firebase.google.com/project/_/appcheck/" target="_blank">App Check</a></li>
+        <li><a class="link" href="https://console.cloud.google.com/run" target="_blank">Cloud Run</a> / <a class="link" href="https://console.cloud.google.com/cloud-build" target="_blank">Cloud Build</a> / <a class="link" href="https://console.cloud.google.com/artifacts" target="_blank">Artifact Registry</a></li>
+        <li><a class="link" href="https://console.cloud.google.com/security/secret-manager" target="_blank">Secret Manager</a> / <a class="link" href="https://console.cloud.google.com/security/recaptcha" target="_blank">reCAPTCHA Enterprise</a></li>
+        <li><a class="link" href="https://search.google.com/search-console" target="_blank">Search Console (Domain Verification)</a></li>
+        <li><a class="link" href="https://console.cloud.google.com/customer-identity/overview" target="_blank">Identity Platform (optional)</a></li>
+      </ul>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="section">
+      <h2 class="heading-secondary">Local Checklist</h2>
+      <ul class="list-bullets-secondary" id="setup-checklist">
+        <li><label><input type="checkbox" data-k="billing" /> Billing account linked</label></li>
+        <li><label><input type="checkbox" data-k="project" /> Project created</label></li>
+        <li><label><input type="checkbox" data-k="apis" /> Required APIs enabled</label></li>
+        <li><label><input type="checkbox" data-k="hosting" /> Firebase Hosting initialized</label></li>
+        <li><label><input type="checkbox" data-k="run" /> Cloud Run service deployed</label></li>
+        <li><label><input type="checkbox" data-k="rewrite" /> Hosting rewrite to Cloud Run</label></li>
+        <li><label><input type="checkbox" data-k="secrets" /> Secrets configured</label></li>
+        <li><label><input type="checkbox" data-k="appcheck" /> App Check / reCAPTCHA set</label></li>
+        <li><label><input type="checkbox" data-k="domain" /> Domain verified</label></li>
+      </ul>
+      <script>
+        const el = document.getElementById('setup-checklist');
+        const key = 'setup-checklist';
+        const saved = JSON.parse(localStorage.getItem(key) || '{}');
+        el?.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+          const k = cb.getAttribute('data-k');
+          if (k && saved[k]) cb.checked = true;
+          cb.addEventListener('change', () => {
+            const state = JSON.parse(localStorage.getItem(key) || '{}');
+            state[k] = cb.checked;
+            localStorage.setItem(key, JSON.stringify(state));
+          });
+        });
+      </script>
+    </div>
+  </main>
+</Layout>
